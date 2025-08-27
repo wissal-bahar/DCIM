@@ -1,0 +1,31 @@
+# Node (frontend & backend)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# Builds / caches
+dist/
+build/
+.vite/
+.next/
+.cache/
+coverage/
+
+# Env & secrets (ne jamais commiter tes secrets)
+.env
+.env.local
+.env.*.local
+frontend/.env
+backend/.env
+
+# Prisma (bases locales…)
+prisma/*.db
+prisma/*.sqlite
+prisma/migrations/.DS_Store
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
