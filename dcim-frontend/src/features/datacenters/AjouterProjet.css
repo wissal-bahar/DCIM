@@ -1,0 +1,64 @@
+/* --- Reprend le style du wizard/form --- */
+.add-steps{
+    display:flex; gap:12px; padding:12px 18px;
+    border-bottom:1px dashed rgba(130,150,220,.18);
+    overflow:auto; color:#e9edff;
+}
+.step{ display:flex; align-items:center; gap:8px; opacity:.6; white-space:nowrap; }
+.step.active, .step.done{ opacity:1 }
+.step .dot{
+    width:22px; height:22px; border-radius:50%;
+    display:grid; place-items:center; font-size:12px;
+    background: rgba(90,110,255,.22);
+    border:1px solid rgba(120,140,255,.35);
+}
+.step.done .dot{ background: #8A2BE2; border-color:#D24BFF ; }
+.step .label{ font-size:14px; }
+
+.add-body{ padding:18px; flex:1; display:flex; flex-direction:column; color:#e9edff; }
+.step-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+.step-grid .full{ grid-column: 1 / -1; }
+
+.form-row{ display:flex; flex-direction:column; gap:8px; }
+.form-row label{ opacity:.85; font-size:14px; }
+
+.form-row input, .form-row textarea, .form-row select{
+    height:44px; border-radius:12px;
+    border:1px solid rgba(165,185,255,.15);
+    background: linear-gradient(180deg, rgba(24,30,56,.7), rgba(16,20,40,.6));
+    color:#e9edff; padding:0 12px;
+    box-shadow:0 8px 24px rgba(58,90,255,.18) inset;
+    outline:none;
+}
+.form-row textarea{ min-height:110px; padding:12px; height:auto; }
+
+.field-err{ color:#ffb1d8; font-size:12px; margin-top:-4px; }
+
+.add-actions{
+    display:flex; gap:12px; align-items:center;
+    margin-top:auto; padding-top:12px;
+    border-top:1px solid rgba(130,150,220,.18);
+}
+.chip{
+    height:44px; display:flex; align-items:center; gap:6px; padding:0 12px; border-radius:12px;
+    background: linear-gradient(180deg, rgba(24,30,56,.7), rgba(16,20,40,.6));
+    color:#cfe1ff; border:1px solid rgba(165,185,255,.15);
+    box-shadow:0 8px 24px rgba(58,90,255,.18) inset;
+    cursor:pointer;
+}
+.chip:hover{ filter:brightness(1.04); }
+
+.add-btn{
+    height:44px; padding:0 16px; border-radius:12px; border:0; white-space:nowrap;
+    background: linear-gradient(135deg,#8A2BE2,#D24BFF);
+    color:#fff; font-weight:700; cursor:pointer;
+    box-shadow:0 12px 30px rgba(210,75,255,.35);
+}
+.add-btn[disabled]{ opacity:.65; cursor:not-allowed; }
+.add-btn:hover:not([disabled]){ filter:brightness(1.06); }
+
+.spacer{ flex:1; }
+
+@media (max-width: 760px){
+    .step-grid{ grid-template-columns: 1fr; }
+}

@@ -1,0 +1,194 @@
+.rack-table-container {
+    background: #fff;
+    color: #1a1a1a;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin: 32px;
+}
+
+
+.rack-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.rack-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.rack-search {
+    padding: 10px 16px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 14px;
+    width: 240px;
+    margin-top: 12px;
+}
+
+/* Cartes */
+.rack-cards {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.rack-card {
+    flex: 1;
+    min-width: 200px;
+    background-color: #f3f4f6;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.rack-card p {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 8px 0 4px;
+}
+
+.rack-card span {
+    font-size: 14px;
+    color: #555;
+}
+
+.rack-card.active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.rack-card.total {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.card-icon {
+    font-size: 24px;
+}
+
+/* Bouton + tableau */
+.rack-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.ajouter-btn {
+    background-color: #1e40af;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.ajouter-btn:hover {
+    background-color: #1c3faa;
+}
+
+.rack-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rack-table th,
+.rack-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.badge-prototype {
+    background-color: #60a5fa; /* blue */
+}
+
+.badge-actif {
+    background-color: #22c55e; /* green */
+}
+
+.badge-inactif {
+    background-color: #a78bfa; /* violet */
+}
+
+.badge-panne {
+    background-color: #f59e0b; /* orange */
+}
+
+.actions .btn {
+    margin-right: 8px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.actions .supprimer {
+    background-color: #ef4444;
+    color: white;
+}
+
+.actions .modifier {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .rack-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .rack-search {
+        width: 100%;
+        margin-top: 12px;
+    }
+
+    .rack-cards {
+        flex-direction: column;
+    }
+
+    .rack-table-container {
+        margin: 16px;
+        padding: 16px;
+    }
+}
+
+.rack-row {
+    cursor: pointer;
+}
+
+.rack-row:hover {
+    background-color: #f5f8ff;
+}
+.clickable-name {
+    cursor: pointer;
+    color: #0A1D45;
+    font-weight: 500;
+}
+
+.clickable-name:hover {
+    text-decoration: underline;
+}

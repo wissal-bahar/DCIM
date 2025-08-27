@@ -1,0 +1,193 @@
+/* ===== AfficherDatacenter.css ===== */
+
+/* Page wrapper */
+.afficher-dc {
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(to bottom right, #0b0d1a, #120e1f, #0a0c19);
+    color: #fff;
+}
+/* Masque le header du Plan2D quand il est embedded */
+.afficher-dc .dc2d-header { display: none; }
+.afficher-dc .dc2d-page { padding-top: 0; }
+
+/* Header (titre + toggle) */
+.afficher-dc-header {
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.brand {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+.brand-badge {
+    height: 36px; width: 36px;
+    border-radius: 12px;
+    background: rgba(34,211,238,.2);
+    box-shadow: 0 0 35px rgba(168,85,247,.45);
+    display: grid; place-items: center;
+    font-weight: 700;
+}
+.brand-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: .02em;
+}
+
+/* Toggle 2D/3D */
+.toggle {
+    display: flex; gap: .5rem;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: .75rem;
+    padding: .25rem;
+}
+.toggle-btn {
+    padding: .375rem 1rem;
+    border-radius: .5rem;
+    font-size: .875rem; font-weight: 600;
+    color: #d1d5db; cursor: pointer;
+    transition: all .2s ease;
+    background: transparent; border: none;
+}
+.toggle-btn:hover { background: rgba(255,255,255,.10); }
+.toggle-btn.is-2d {
+    background: linear-gradient(to right,#d946ef,#6366f1);
+    color: #fff; box-shadow: 0 8px 30px rgba(99,102,241,.35);
+}
+.toggle-btn.is-3d {
+    background: linear-gradient(to right,#6366f1,#22d3ee);
+    color: #fff; box-shadow: 0 8px 30px rgba(34,211,238,.35);
+}
+
+/* Corps de page */
+.afficher-dc-main {
+    display: flex; gap: 1.5rem;
+    height: calc(100vh - 4rem);
+    padding: 1.5rem;
+}
+
+/* Zone plan (centre) */
+.plan {
+    flex: 1;
+    border-radius: 1rem;
+    border: 1px solid rgba(255,255,255,.1);
+    background: linear-gradient(to bottom right, rgba(255,255,255,.05), transparent);
+    padding: 1.5rem;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* ——— Vue 2D ——— */
+.racks-2d {
+    display: flex; flex-direction: column; gap: 2rem;
+}
+.racks-row {
+    display: flex; align-items: center; gap: .75rem;
+}
+.rack-card {
+    position: relative;
+    width: 80px; height: 128px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(14,18,34,.7);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: flex-end; justify-content: center;
+    font-size: 12px; color: rgba(207,250,254,.9);
+    transition: box-shadow .2s ease, outline .2s ease;
+    outline: 2px solid transparent;
+}
+.rack-card:hover {
+    outline-color: rgba(34,211,238,.7);
+    box-shadow: 0 0 25px rgba(34,211,238,.45);
+}
+.rack-card.is-selected {
+    outline-color: rgba(34,211,238,.7);
+    box-shadow: 0 0 25px rgba(34,211,238,.55);
+}
+.rack-card .label { margin-bottom: .5rem; font-weight: 600; letter-spacing: .02em; }
+
+/* allée centrale (chaud/froid) */
+.aisle {
+    height: 56px; width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.05);
+    background: linear-gradient(90deg,
+    rgba(99,102,241,.10), rgba(168,85,247,.10), rgba(34,211,238,.10));
+}
+
+/* ——— Vue 3D ——— */
+.three-canvas {
+    border-radius: 16px;
+    background: #0b0f1a; /* fallback si le Canvas n’affiche pas */
+}
+/* optionnel : pas nécessaire si tu gardes les styles inline */
+.dc2d-scroll { overflow: auto; cursor: grab; }
+/* Le conteneur de la zone plan (gauche) pour la 3D */
+.plan3d-host {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Le Canvas de @react-three/fiber doit absolument remplir */
+.plan3d-host canvas,
+.dc3d-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+/* Panneau d’info (droite) */
+.info-panel {
+    width: 340px; min-width: 300px; max-width: 360px; height: 100%;
+    border-radius: 16px;
+    background: rgba(255,255,255,.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 20px;
+    color: #e5e7eb;
+    display: flex; flex-direction: column; gap: 16px;
+}
+.info-panel h3 {
+    color: #22d3ee; font-size: 20px; font-weight: 600; letter-spacing: .02em;
+}
+.info-panel .meta { color: #94a3b8; font-size: 13px; margin-top: 4px; }
+
+.stat { display: flex; align-items: center; justify-content: space-between; }
+.stat .key { color: #94a3b8; }
+.stat .value { font-weight: 500; }
+.value.ok { color: #34d399; }
+.value.ko { color: #fb7185; }
+
+.sep { height: 1px; background: rgba(255,255,255,.10); margin: 12px 0; }
+
+/* Actions */
+.actions {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
+}
+.btn {
+    padding: 8px 12px; border-radius: 12px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    border: none; transition: opacity .2s ease, background .2s ease;
+}
+.btn-modifier {
+    color: #fff; background: linear-gradient(90deg,#d946ef,#6366f1);
+    box-shadow: 0 8px 35px rgba(168,85,247,.35);
+}
+.btn-modifier:hover { opacity: .95; }
+.btn-supprimer {
+    color: #fff; background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+}
+.btn-supprimer:hover { background: rgba(255,255,255,.10); }
+.btn-ports {
+    color: #fff; background: linear-gradient(90deg,#6366f1,#22d3ee);
+    box-shadow: 0 8px 35px rgba(34,211,238,.35);
+}
+.btn-ports:hover { opacity: .95; }

@@ -1,0 +1,20 @@
+.nvfi3d-page {
+    min-height: 100vh;
+    width: 100%;
+    background: #0e0a1f; /* ou #fff si tu veux VRAIMENT blanc */
+    color: #fff;
+}
+
+.nvfi3d-loading {
+    padding: 24px;
+    font-weight: 700;
+    opacity: .85;
+}
+
+/* au cas où le composant 3D n'impose pas déjà width/height */
+.nvfi3d-page canvas,
+.nvfi3d-page iframe {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: block;
+}

@@ -1,0 +1,49 @@
+/* Cohérent avec ta 2D, plein écran dans la zone gauche */
+.dc3d-page{
+    padding: 16px 18px 24px;
+}
+
+.dc3d-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+}
+
+.dc3d-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+    font-size:22px;
+}
+.dc3d-title .pill{
+    padding:4px 10px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(90deg,#e6e6ff14,#ffffff10);
+}
+.dc3d-title .dc-id{ opacity:.8; font-weight:600; }
+
+.dc3d-main{
+    position:relative;
+    height: calc(100vh - 180px);
+    min-height: 420px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;
+    background:rgba(255,255,255,.03);
+    overflow:hidden;
+}
+
+.dc3d-canvas{
+    width:100% !important;
+    height:100% !important;
+    display:block;
+}
+
+/* états */
+.dc3d-loading, .err{
+    padding:12px 14px;
+    color:#e9e9ff;
+}
+.err{ color:#ffb4c0; }

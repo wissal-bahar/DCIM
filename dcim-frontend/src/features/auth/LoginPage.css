@@ -1,0 +1,139 @@
+:root{
+    --bg-dark:#070b17;
+    --primary:#D538DC;
+    --primary-2:#030188;
+    --text:#e8ecff;
+    --muted:#a7b2d9;
+    --card:#0e1426cc;
+}
+
+
+/* Le wrapper couvre TOUT le viewport */
+.login{
+    position: fixed;          /* 🔥 couvre toute la fenêtre peu importe le parent */
+    inset: 0;                 /* top/right/bottom/left à 0 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    background-color: #000218;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+}
+
+/* Fond plein écran */
+.login-bg,
+.login-overlay{
+    position: absolute;
+    inset: 0;
+}
+.login-bg{
+    background-position: center;
+    background-size: cover;
+    filter: brightness(0.65) contrast(1.05) saturate(1.1);
+    z-index: 0;
+}
+.login-overlay{
+    background:
+            radial-gradient(60% 30% at 50% 20%, rgba(0,119,255,.18), transparent 60%),
+            linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,.75) 100%);
+    z-index: 1;
+}
+
+/* Carte login */
+.login-card{
+    position: relative;
+    z-index: 2;
+    width: min(560px, 92vw);
+
+    /* plus haute */
+    padding: 48px 32px 56px;   /* ↑ haut + bas agrandis */
+
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(15,23,51,.88), rgba(10,16,38,.88));
+    border: 1px solid rgba(30,42,85,.7);
+    box-shadow: 0 24px 48px rgba(0,0,0,.45),
+    inset 0 0 30px rgba(47,91,255,.12);
+    backdrop-filter: blur(6px);
+}
+
+/* Titre */
+.login-title{
+    margin: 6px 4px 32px;   /* 👈 espace plus grand en bas */
+    text-align: center;
+    font-weight: 900;
+    letter-spacing: .02em;
+    font-size: clamp(28px, 4.2vw, 44px);
+    text-shadow:
+            0 0 10px rgba(79,195,247,.35),
+            0 0 26px rgba(47,91,255,.45);
+}
+
+
+/* Form */
+.login-form{ display:flex; flex-direction:column; gap:16px; }
+
+.field{
+    position:relative;
+    display:flex; align-items:center;
+    background: rgba(5,10,26,.55);
+    border:1px solid rgba(112,198,255,.25);
+    border-radius:12px;
+    padding:10px 12px 10px 40px;
+    transition: box-shadow .2s ease, border-color .2s ease, transform .05s ease;
+}
+.field:focus-within{
+    border-color: rgba(112,198,255,.65);
+    box-shadow: 0 0 0 3px rgba(112,198,255,.18), inset 0 0 20px rgba(47,91,255,.12);
+    transform: translateY(-1px);
+}
+.field input{
+    width:100%;
+    border:none; outline:none;
+    background:transparent;
+    color:var(--text);
+    font-size: 16px;
+    padding:6px 0;
+}
+.field .icon{
+    position:absolute; left:12px; color:#9fc9ff;
+    display:inline-flex;
+}
+
+/* Inline row */
+.row{
+    display:flex; justify-content:flex-end; margin-top:2px;
+}
+.link{
+    color:#76caff; text-decoration:none; font-size:14px;
+}
+.link:hover{ text-decoration:underline }
+
+/* Primary button (same gradient as Home .cta) */
+.btn-primary{
+    margin-top:6px;
+    width:100%;
+    padding:14px 22px;
+    border:none; border-radius:14px;
+    color:#fff; font-weight:900; letter-spacing:.02em;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+    box-shadow: 0 8px 30px rgba(47,91,255,.35);
+    cursor:pointer;
+    transition: transform .15s ease, filter .2s ease, box-shadow .25s ease;
+}
+.btn-primary:hover{
+    transform: translateY(-1px);
+    filter: saturate(1.05);
+    box-shadow: 0 10px 25px rgba(213,56,220,.35);
+}
+
+.meta{
+    margin-top:10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+}
+
+/* Responsive */
+@media (max-width: 520px){
+    .login-card{ margin-top: 92px; padding: 22px }
+}

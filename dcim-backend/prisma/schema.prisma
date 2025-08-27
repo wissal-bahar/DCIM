@@ -1,0 +1,639 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =======================
+// ENUMS
+// =======================
+enum RackStatus {
+  prototype
+  en_marche
+  en_arret
+}
+
+enum ComponentType {
+  serveur_rackable
+  serveur_lame
+  vMSC
+  vCU
+  vDU
+  switch
+  routeur
+  firewall
+  load_balancer
+  dns_dhcp
+  nas
+  san
+  controleur_stockage
+}
+
+enum ComponentStatus {
+  actif
+  inactif
+  en_panne
+  maintenance
+}
+
+enum OrgType {
+  CLIENT
+  ERICSSON
+  VENDOR
+  PARTNER
+  OTHER
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  ON_HOLD
+  DONE
+  CANCELLED
+}
+
+enum ProjectContactRole {
+  PRIMARY
+  TECHNICAL
+  PM
+  SECURITY
+  OPS
+  OTHER
+}
+
+enum DatacenterContactRole {
+  ON_SITE
+  SECURITY_GATE
+  FACILITIES
+  POWER
+  IT
+  OTHER
+}
+
+enum RackLockType {
+  MECHANICAL
+  ELECTRONIC_READY
+  BIOMETRIC_READY
+}
+
+enum RackDoorStyle {
+  PERFORATED
+  SOLID
+  MESH
+}
+
+enum RackColor {
+  BLACK
+  WHITE
+  GREY
+  BLUE
+  OTHER
+}
+
+enum ComponentLayer {
+  PHYSICAL
+  LOGICAL
+}
+
+enum PhysicalFunction {
+  COMPUTER_SYSTEM
+  RTE_SERVER
+  STORAGE_SYSTEM
+  NETWORK_SWITCH
+  PATCH_PANEL // ODF / DDF
+  PDU // PDU / ePDU
+  COOLING_UNIT // CRAC/Down-flow, etc.
+  OTHER
+}
+
+// ---- Ports/Liaisons (port-mapping) ----
+enum PortKind {
+  NETWORK // data (Ethernet, FC, etc.)
+  CONSOLE // mgmt série/USB
+  POWER // alim (C13/C14...)
+  STORAGE // SAS/FC
+  OTHER
+}
+
+enum PortConnector {
+  RJ45
+  SFP
+  SFP_PLUS
+  QSFP
+  QSFP28
+  LC
+  SC
+  DB9
+  USB_A
+  USB_C
+  C13
+  C14
+  OTHER
+}
+
+enum PortFace {
+  FRONT
+  REAR
+  INTERNAL
+}
+
+enum CableType {
+  CAT6A
+  DAC_100G
+  DAC_40G
+  AOC_100G
+  FIBER_SM_LC
+  FIBER_MM_OM4_LC
+  POWER_C13_C14
+  OTHER
+}
+
+enum LinkStatus {
+  PLANNED
+  ACTIVE
+  FAILED
+  DECOMMISSIONED
+}
+
+enum RedundancyPlan {
+  A
+  B
+}
+
+enum SiteAssetKind {
+  DOOR
+  COOLING
+  ODF
+  DDF
+  COLUMN
+  NOTE
+  OTHER
+}
+
+// Position d’un composant sur/au bord du rack (utile PDU)
+enum RackSide {
+  LEFT
+  RIGHT
+  FRONT
+  REAR
+  TOP
+}
+
+enum DocEntityType {
+  DATACENTER
+  RACK
+  PROJECT
+  COMPONENT
+  PORT
+  LIAISON
+}
+
+// =======================
+// Utilisateur & Auth
+// =======================
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  isAuthorized Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  passwordHash String?  @db.VarChar(255)
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model AccessRequest {
+  id        String   @id @default(cuid())
+  email     String
+  message   String
+  status    RequestStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  handledAt DateTime?
+  handledBy String?        // userId de l'admin qui traite
+
+  @@index([email, createdAt])
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// =======================
+// Organization & Contact
+// =======================
+model Organization {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  type      OrgType
+  country   String?
+  notes     String?
+  contacts  Contact[]
+  projects  Project[] @relation("ClientOrgProjects")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Contact {
+  id               String              @id @default(uuid())
+  fullName         String
+  title            String?
+  orgId            String
+  organization     Organization        @relation(fields: [orgId], references: [id])
+  emails           String[]
+  phones           String[]
+  preferredChannel String?
+  isActive         Boolean             @default(true)
+  notes            String?
+  projectLinks     ProjectContact[]
+  datacenterLinks  DatacenterContact[]
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@index([orgId])
+  @@index([fullName])
+}
+
+// =======================
+// Datacenter & Plan
+// =======================
+model Datacenter {
+  id        String    @id @default(uuid())
+  name      String    @unique // <<< unique pour upsert par name
+  client    String
+  siteName  String?
+  address   String?
+  visitDate DateTime?
+
+  acVoltage     String?
+  phases        String?
+  frequency     Int?
+  coolingType   String?
+  coolingUnits  Int?
+  powerPlant    Boolean?
+  groundingType String?
+
+  hasGenerator      Boolean?
+  hasFireExt        Boolean?
+  hasEmergencyLight Boolean?
+  hasSecurity       Boolean?
+  hasToilets        Boolean?
+
+  planUrl        String?
+  gridRows       Int?
+  gridCols       Int?
+  gridCellSizeMm Int?
+
+  racks      Rack[]
+  projects   Project[]           @relation("DatacenterProjects")
+  contacts   DatacenterContact[]
+  siteAssets SiteAsset[]
+  components Component[] // wall/room components (ODF mural, cooling, etc.)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Marqueurs non-rack sur le plan (portes, AC, ODF muraux, etc.)
+model SiteAsset {
+  id           String     @id @default(uuid())
+  datacenterId String
+  datacenter   Datacenter @relation(fields: [datacenterId], references: [id])
+
+  kind        SiteAssetKind
+  label       String?
+  posRow      Int?
+  posCol      Int?
+  spanRows    Int? // largeur/hauteur en cellules
+  spanCols    Int?
+  rotationDeg Int? // 0/90/180/270
+  notes       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([datacenterId, kind])
+}
+
+// Catalogue des modèles de racks
+model RackModel {
+  id                   String         @id @default(uuid())
+  manufacturer         String
+  modelRef             String
+  sku                  String?
+  uHeight              Int
+  heightMm             Int?
+  widthMm              Int?
+  depthMm              Int?
+  staticLoadKg         Int?
+  dynamicLoadKg        Int?
+  frontDoorStyle       RackDoorStyle?
+  rearDoorStyle        RackDoorStyle?
+  doorOpenAreaPct      Int?
+  color                RackColor?
+  warrantyYears        Int?
+  shockPalletSupported Boolean?
+  shipPreconfiguredOk  Boolean?
+
+  racks     Rack[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([manufacturer, modelRef], name: "manufacturer_modelRef") // <<< ajouté
+}
+
+// Instance d’un rack
+model Rack {
+  id           Int        @id @default(autoincrement())
+  nom          String
+  localisation String
+  nbUnites     Int
+  description  String?
+  status       RackStatus @default(prototype)
+
+  // Position sur la grille du DC
+  posRow      Int?
+  posCol      Int?
+  rotationDeg Int? // 0, 90, 180, 270
+
+  // Relations
+  datacenterId String?
+  datacenter   Datacenter? @relation(fields: [datacenterId], references: [id])
+
+  rackModelId String?
+  model       RackModel? @relation(fields: [rackModelId], references: [id])
+
+  unites       Unite[]
+  components   Component[]
+  projectLinks ProjectRack[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([datacenterId, nom]) // Unicité du nom dans un même DC
+  @@index([datacenterId])
+}
+
+model Unite {
+  id        Int        @id @default(autoincrement())
+  numero    Int
+  rack      Rack       @relation(fields: [rackId], references: [id])
+  rackId    Int
+  composant Component?
+}
+
+// =======================
+// Catalogue modèles physiques + templates de ports
+// =======================
+model PhysicalComponentModel {
+  id       String           @id @default(uuid())
+  vendor   String
+  model    String
+  function PhysicalFunction
+  ports    Int?
+  notes    String?
+
+  instances     Component[]    @relation("PhysicalInstances")
+  portTemplates PortTemplate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([model, vendor, function], name: "model_vendor_function") // <<< ajouté
+}
+
+model PortTemplate {
+  id         String                 @id @default(uuid())
+  modelId    String
+  model      PhysicalComponentModel @relation(fields: [modelId], references: [id])
+  fixedName  String? // "CONSOLE", "PWR1"
+  namePrefix String? // "Eth1/"
+  startIndex Int?
+  endIndex   Int?
+  face       PortFace?
+  kind       PortKind               @default(NETWORK)
+  connector  PortConnector          @default(OTHER)
+  speedMbps  Int?
+  poe        Boolean?
+  media      String?
+  notes      String?
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+
+  @@index([modelId])
+}
+
+// =======================
+// Composants (physiques / logiques)
+// =======================
+model Component {
+  id    Int            @id @default(autoincrement())
+  nom   String
+  layer ComponentLayer @default(PHYSICAL)
+
+  // Placement
+  rackId  Int?
+  rack    Rack?  @relation(fields: [rackId], references: [id])
+  uniteId Int?   @unique
+  unite   Unite? @relation(fields: [uniteId], references: [id])
+
+  // Option : composant “libre” dans la salle (ODF mural, cooling, etc.)
+  datacenterId String?
+  datacenter   Datacenter? @relation(fields: [datacenterId], references: [id])
+
+  // Position sur/au bord du rack (ex: PDU gauche/droite)
+  rackSide RackSide?
+
+  // Modèle constructeur (si physique)
+  modelId String?
+  model   PhysicalComponentModel? @relation("PhysicalInstances", fields: [modelId], references: [id])
+
+  // Lien LOGIQUE ↔ PHYSIQUE (M–N)
+  hostedOn Component[] @relation("LogicalOnPhysical")
+  hosts    Component[] @relation("LogicalOnPhysical")
+
+  // Champs existants
+  type        ComponentType
+  modele      String
+  statut      ComponentStatus
+  description String?
+  color       String?
+  numeroserie String?
+
+  ports Port[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =======================
+// Ports & Liaisons
+// =======================
+model Port {
+  id          Int           @id @default(autoincrement())
+  componentId Int
+  composant   Component     @relation(fields: [componentId], references: [id])
+  name        String?
+  index       Int?
+  face        PortFace?
+  kind        PortKind      @default(NETWORK)
+  connector   PortConnector @default(OTHER)
+  speedMbps   Int?
+  poe         Boolean?
+  media       String?
+  notes       String?
+  liaisonAsA  Liaison?      @relation("PortA")
+  liaisonAsB  Liaison?      @relation("PortB")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([componentId])
+}
+
+// Catalogue "Cable Type" réutilisable (codes Excel)
+model CableTypeRef {
+  id             String     @id @default(uuid())
+  code           String     @unique // ex: "RPM 777 054/030000"
+  label          String?
+  vendor         String?
+  category       CableType?
+  defaultSpeed   String?
+  defaultLengthM Float?
+  notes          String?
+  liaisons       Liaison[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([code])
+}
+
+model Liaison {
+  id      Int  @id @default(autoincrement())
+  portAId Int  @unique
+  portA   Port @relation("PortA", fields: [portAId], references: [id])
+  portBId Int  @unique
+  portB   Port @relation("PortB", fields: [portBId], references: [id])
+
+  // Cable Type catalogue + fallback
+  cableTypeId String?
+  cableType   CableTypeRef?   @relation(fields: [cableTypeId], references: [id])
+  type        CableType?
+  vitesse     String?
+  refCode     String?
+  plan        RedundancyPlan?
+
+  longueurM   Float?
+  status      LinkStatus @default(ACTIVE)
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cableTypeId])
+}
+
+// =======================
+// Documents (pièces jointes) plus tard
+// =======================
+
+// =======================
+// Projets, alias et journal
+// =======================
+model Project {
+  id           String           @id @default(uuid())
+  name         String
+  code         String?          @unique
+  description  String?
+  status       ProjectStatus    @default(PLANNED)
+  clientOrgId  String
+  client       Organization     @relation("ClientOrgProjects", fields: [clientOrgId], references: [id])
+  datacenterId String?
+  datacenter   Datacenter?      @relation("DatacenterProjects", fields: [datacenterId], references: [id])
+  contacts     ProjectContact[]
+  racks        ProjectRack[]
+  aliases      ProjectAlias[]
+  startDate    DateTime?
+  endDate      DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model ProjectAlias {
+  projectId String
+  key       String
+  value     String
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([projectId, key])
+}
+
+model ProjectContact {
+  projectId String
+  contactId String
+  role      ProjectContactRole
+  scope     String?
+  notes     String?
+  project   Project            @relation(fields: [projectId], references: [id])
+  contact   Contact            @relation(fields: [contactId], references: [id])
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  @@id([projectId, contactId, role])
+  @@index([contactId])
+}
+
+model DatacenterContact {
+  datacenterId String
+  contactId    String
+  role         DatacenterContactRole
+  availability String?
+  datacenter   Datacenter            @relation(fields: [datacenterId], references: [id])
+  contact      Contact               @relation(fields: [contactId], references: [id])
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  @@id([datacenterId, contactId, role])
+  @@index([contactId])
+}
+
+model ProjectRack {
+  projectId String
+  rackId    Int
+  notes     String?
+  project   Project  @relation(fields: [projectId], references: [id])
+  rack      Rack     @relation(fields: [rackId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([projectId, rackId])
+  @@index([rackId])
+}
+
+// =======================
+// Journal des changements (audit léger)
+// =======================
+model ChangeLog {
+  id         String   @id @default(uuid())
+  entityType String // "RACK" | "COMPONENT" | ...
+  entityId   String
+  action     String // "CREATE" | "UPDATE" | "DELETE"
+  userEmail  String?
+  diffJson   Json?
+  createdAt  DateTime @default(now())
+}
+

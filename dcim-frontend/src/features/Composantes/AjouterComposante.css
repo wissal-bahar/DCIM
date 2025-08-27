@@ -1,0 +1,192 @@
+/* On recycle les mêmes variables et la même grille que AjouterDatacenter.css pour un rendu identique */
+:root{
+    --border: #182145;
+    --shadow: 0 10px 24px rgba(0,0,0,.35);
+    --grad-surface: linear-gradient(180deg, rgba(16,20,40,.98), rgba(10,13,26,.98));
+    --grad-field: linear-gradient(180deg, rgba(24,30,56,.7), rgba(16,20,40,.6));
+    --accent-1: #8A2BE2;
+    --accent-2: #D24BFF;
+    --ok-1: rgba(60,200,120,.45);
+    --ok-2: rgba(60,200,120,.22);
+    --fg: #e9edff;
+}
+
+/* Drawer et structure — mêmes classes que la page Datacenter */
+.dcim-add-drawer { position: fixed; inset: 0; z-index: 80; display: none; }
+.dcim-add-drawer.open { display: block; }
+
+.dcim-add-backdrop{
+    position:absolute; inset:0;
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(2px);
+}
+
+.dcim-add-panel{
+    position:absolute; right:0; top:0; height:100%; width:min(720px, 96vw);
+    background: var(--grad-surface);
+    border-left: 1px solid rgba(130,150,220,.2);
+    box-shadow: -8px 0 28px rgba(0,0,0,.35);
+    display:flex; flex-direction:column;
+    animation: dcimSlideIn .18s ease-out;
+}
+
+@keyframes dcimSlideIn{
+    from{ transform: translateX(12px); opacity:.7 }
+    to{ transform: translateX(0); opacity:1 }
+}
+
+.add-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px;
+    border-bottom:1px solid rgba(130,150,220,.18);
+    color:var(--fg);
+}
+.add-head h2{ margin:0; font-size:22px; }
+
+.icon-btn{
+    background:transparent; border:0; color:#cfe1ff;
+    font-size:18px; cursor:pointer; opacity:.85;
+}
+.icon-btn:hover{ opacity:1 }
+
+.add-steps{
+    display:flex; gap:12px; padding:12px 18px;
+    border-bottom:1px dashed rgba(130,150,220,.18);
+    overflow:auto;
+}
+.step{
+    display:flex; align-items:center; gap:8px;
+    opacity:.6; color:var(--fg); white-space:nowrap;
+}
+.step .dot{
+    width:22px; height:22px; border-radius:50%;
+    display:grid; place-items:center; font-size:12px;
+    background: rgba(90,110,255,.22);
+    border:1px solid rgba(120,140,255,.35);
+}
+.step.active, .step.done{ opacity:1 }
+.step.done .dot{
+    background: var(--ok-2);
+    border-color: var(--ok-1);
+}
+.step .label{ font-size:14px; }
+
+.add-body{
+    padding:18px; flex:1; display:flex; flex-direction:column; color:var(--fg);
+}
+.step-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:14px;
+}
+.step-grid .full{ grid-column: 1 / -1; }
+
+.form-row{
+    display:flex; flex-direction:column; gap:8px;
+}
+.form-row label{ opacity:.85; font-size:14px; }
+.req{ color:#ff7adf; margin-left:4px; }
+
+.form-row input,
+.form-row textarea,
+.form-row select{
+    height:44px; border-radius:12px;
+    border:1px solid rgba(165,185,255,.15);
+    background: var(--grad-field);
+    color:#e9edff;
+    padding:0 12px;
+    box-shadow:0 8px 24px rgba(58,90,255,.18) inset;
+    outline:none;
+}
+.form-row textarea{ min-height:110px; padding:12px; height:auto; }
+
+.field-err{
+    color:#ffb1d8; font-size:12px; margin-top:-4px;
+}
+
+.add-actions{
+    display:flex; gap:12px; align-items:center;
+    margin-top:auto; padding-top:12px;
+    border-top:1px solid rgba(130,150,220,.18);
+}
+
+.chip{
+    height:44px; display:flex; align-items:center; gap:6px; padding:0 12px; border-radius:12px;
+    background: var(--grad-field);
+    color:#cfe1ff; border:1px solid rgba(165,185,255,.15);
+    box-shadow:0 8px 24px rgba(58,90,255,.18) inset;
+    cursor:pointer;
+}
+.chip:hover{ filter:brightness(1.04); }
+
+.add-btn{
+    height:44px; padding:0 16px; border-radius:12px; border:0; white-space:nowrap;
+    background: linear-gradient(135deg,var(--accent-1),var(--accent-2));
+    color:#fff; font-weight:700; cursor:pointer;
+    box-shadow:0 12px 30px rgba(210,75,255,.35);
+}
+.add-btn[disabled]{ opacity:.65; cursor:not-allowed; }
+.add-btn:hover:not([disabled]){ filter:brightness(1.06); }
+
+.spacer{ flex:1; }
+
+/* Palette de couleurs */
+.color-grid{
+    display:grid; grid-template-columns: repeat(8, 32px);
+    gap:8px; margin-top:6px;
+}
+.color-square{
+    width:32px; height:32px; border-radius:6px;
+    border:2px solid transparent; cursor:pointer;
+    transition: transform .1s ease-in-out, border-color .2s;
+}
+.color-square:hover{ transform: scale(1.1); }
+.color-square.selected{ border-color:#3b82f6; }
+
+@media (max-width: 720px){
+    .step-grid{ grid-template-columns: 1fr; }
+    .dcim-add-panel{ width: 100vw; }
+    .add-steps{ padding-right:14px; }
+}
+/* ===== Modal centrée (comme Ajouter Datacenter) ===== */
+.dcim-modal {
+    position: fixed; inset: 0; z-index: 80;
+    display: grid; place-items: center;
+}
+
+.dcim-modal-backdrop{
+    position:absolute; inset:0;
+    background: rgba(0,0,0,.5);    /* sans blur pour éviter le flou sur le contenu */
+}
+
+.dcim-modal-panel{
+    position: relative;
+    width: min(880px, 94vw);
+    max-height: 88vh;
+    display: flex; flex-direction: column;
+    background: var(--grad-surface);
+    border: 1px solid rgba(130,150,220,.22);
+    box-shadow: var(--shadow);
+    border-radius: 14px;
+    overflow: hidden;             /* header collé + scroll interne */
+    z-index: 1;                   /* au-dessus du backdrop */
+    animation: dcimPop .16s ease-out;
+}
+
+@keyframes dcimPop {
+    from { transform: translateY(8px); opacity: .85; }
+    to   { transform: translateY(0);   opacity: 1;   }
+}
+
+/* Dans la modale : même corps & footer que le drawer */
+.dcim-modal-panel .add-body{
+    overflow: auto;               /* scroll interne si contenu long */
+    padding: 18px;
+}
+.dcim-modal-panel .add-actions{
+    padding: 12px 18px;
+    border-top: 1px solid rgba(130,150,220,.18);
+}
+
+/* Mobile */
+@media (max-width: 720px){
+    .dcim-modal-panel{ width: 96vw; max-height: 92vh; }
+}

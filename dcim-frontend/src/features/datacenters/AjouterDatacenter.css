@@ -1,0 +1,219 @@
+:root{
+    --border: #182145;
+    --shadow: 0 10px 24px rgba(0,0,0,.35);
+    --grad-surface: linear-gradient(180deg, rgba(16,20,40,.98), rgba(10,13,26,.98));
+    --grad-field: linear-gradient(180deg, rgba(24,30,56,.7), rgba(16,20,40,.6));
+    --accent-1: #8A2BE2; /* violet */
+    --accent-2: #D24BFF; /* rose-violet */
+    --ok-1: rgba(60,200,120,.45);
+    --ok-2: rgba(60,200,120,.22);
+    --fg: #e9edff;
+}
+
+/* =========================
+   Drawer (overlay + panel)
+   ========================= */
+.dcim-add-drawer { position: fixed; inset: 0; z-index: 80; display: none; }
+.dcim-add-drawer.open { display: block; }
+
+.dcim-add-backdrop{
+    position:absolute; inset:0;
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(2px);
+}
+
+.dcim-add-panel{
+    position:absolute; right:0; top:0; height:100%; width:min(720px, 96vw);
+    background: var(--grad-surface);
+    border-left: 1px solid rgba(130,150,220,.2);
+    box-shadow: -8px 0 28px rgba(0,0,0,.35);
+    display:flex; flex-direction:column;
+    animation: dcimSlideIn .18s ease-out;
+}
+
+@keyframes dcimSlideIn{
+    from{ transform: translateX(12px); opacity:.7 }
+    to{ transform: translateX(0); opacity:1 }
+}
+
+/* =========================
+   Header + Close
+   ========================= */
+.add-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px;
+    border-bottom:1px solid rgba(130,150,220,.18);
+    color:var(--fg);
+}
+.add-head h2{ margin:0; font-size:22px; }
+
+.icon-btn{
+    background:transparent; border:0; color:#cfe1ff;
+    font-size:18px; cursor:pointer; opacity:.85;
+}
+.icon-btn:hover{ opacity:1 }
+
+/* =========================
+   Stepper (étapes)
+   ========================= */
+.add-steps{
+    display:flex; gap:12px; padding:12px 18px;
+    border-bottom:1px dashed rgba(130,150,220,.18);
+    overflow:auto;
+}
+.step{
+    display:flex; align-items:center; gap:8px;
+    opacity:.6; color:var(--fg); white-space:nowrap;
+}
+.step .dot{
+    width:22px; height:22px; border-radius:50%;
+    display:grid; place-items:center; font-size:12px;
+    background: rgba(90,110,255,.22);
+    border:1px solid rgba(120,140,255,.35);
+}
+.step.active, .step.done{ opacity:1 }
+.step.done .dot{
+    background: var(--ok-2);
+    border-color: var(--ok-1);
+}
+.step .label{ font-size:14px; }
+
+/* =========================
+   Body + Grid
+   ========================= */
+.add-body{
+    padding:18px; flex:1; display:flex; flex-direction:column; color:var(--fg);
+}
+.step-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:14px;
+}
+.step-grid .full{ grid-column: 1 / -1; }
+
+/* =========================
+   Champs / Inputs
+   ========================= */
+.form-row{
+    display:flex; flex-direction:column; gap:8px;
+}
+.form-row label{ opacity:.85; font-size:14px; }
+.req{ color:#ff7adf; margin-left:4px; }
+
+.form-row input,
+.form-row textarea,
+.form-row select{
+    height:44px; border-radius:12px;
+    border:1px solid rgba(165,185,255,.15);
+    background: var(--grad-field);
+    color:#e9edff;
+    padding:0 12px;
+    box-shadow:0 8px 24px rgba(58,90,255,.18) inset;
+    outline:none;
+}
+.form-row textarea{ min-height:110px; padding:12px; height:auto; }
+
+/* Nombre : bloque les caractères non numériques (géré côté TSX),
+   mais on garde l'input visuel identique */
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button{
+    -webkit-appearance: none; margin:0;
+}
+
+.field-err{
+    color:#ffb1d8; font-size:12px; margin-top:-4px;
+}
+
+/* =========================
+   Switch (booléens)
+   ========================= */
+.switch-row{ display:flex; align-items:center; justify-content:space-between; }
+.switch-ui{ position: relative; width:48px; height:26px; display:inline-block; }
+.switch-ui input{ display:none; }
+.switch-ui .slider{
+    position:absolute; inset:0; cursor:pointer; border-radius:999px;
+    background:rgba(140,160,255,.25); transition:.18s;
+}
+.switch-ui .slider:before{
+    content:""; position:absolute; height:20px; width:20px; left:4px; top:3px;
+    background:white; border-radius:50%; transition:.18s;
+}
+.switch-ui input:checked + .slider{ background:rgba(90,200,140,.35); }
+.switch-ui input:checked + .slider:before{ transform: translateX(22px); }
+
+/* =========================
+   Erreurs globales
+   ========================= */
+.form-error{
+    margin-bottom:14px; padding:10px 12px; border-radius:12px;
+    background: rgba(210,75,255,.12);
+    border:1px solid rgba(210,75,255,.35);
+    color:#ffdfff; font-size:14px;
+}
+
+/* =========================
+   Footer actions
+   ========================= */
+.add-actions{
+    display:flex; gap:12px; align-items:center;
+    margin-top:auto; padding-top:12px;
+    border-top:1px solid rgba(130,150,220,.18);
+}
+
+/* Boutons génériques (compatibles avec ceux déjà présents) */
+.chip{
+    height:44px; display:flex; align-items:center; gap:6px; padding:0 12px; border-radius:12px;
+    background: var(--grad-field);
+    color:#cfe1ff; border:1px solid rgba(165,185,255,.15);
+    box-shadow:0 8px 24px rgba(58,90,255,.18) inset;
+    cursor:pointer;
+}
+.chip:hover{ filter:brightness(1.04); }
+
+.add-btn{
+    height:44px; padding:0 16px; border-radius:12px; border:0; white-space:nowrap;
+    background: linear-gradient(135deg,var(--accent-1),var(--accent-2));
+    color:#fff; font-weight:700; cursor:pointer;
+    box-shadow:0 12px 30px rgba(210,75,255,.35);
+}
+.add-btn[disabled]{ opacity:.65; cursor:not-allowed; }
+.add-btn:hover:not([disabled]){ filter:brightness(1.06); }
+
+/* Utilitaire pour pousser les boutons à droite */
+.spacer{ flex:1; }
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width: 720px){
+    .step-grid{ grid-template-columns: 1fr; }
+    .dcim-add-panel{ width: 100vw; }
+    .add-steps{ padding-right:14px; }
+}
+/* petit groupe d'actions à droite */
+.card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.card-top .loc { margin-left: auto; }     /* pousse les actions à droite */
+.card-top .actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.icon-btn {
+    appearance: none;
+    border: 0;
+    padding: 6px 8px;
+    border-radius: 10px;
+    background: rgba(0,0,0,.06);
+    color: inherit;
+    cursor: pointer;
+    line-height: 1;
+}
+.icon-btn:hover { background: rgba(0,0,0,.12); }
+.icon-btn.danger { background: rgba(220,0,0,.08); }
+.icon-btn.danger:hover { background: rgba(220,0,0,.16); }

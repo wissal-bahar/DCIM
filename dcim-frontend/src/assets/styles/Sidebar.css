@@ -1,0 +1,126 @@
+/* Topbar “verre” (comme la home) */
+.glass-topbar{
+    position: fixed; inset: 0 0 auto 0; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; z-index: 50;
+    background: linear-gradient(180deg, rgba(5,8,17,.78), rgba(5,8,17,.55));
+    backdrop-filter: blur(8px) saturate(150%);
+    border-bottom: 1px solid rgba(130,150,220,.18);
+}
+
+/* Logo bouton à gauche */
+.logo-btn{
+    display: inline-flex; align-items: center; gap: 10px;
+    height: 42px; padding: 6px 10px; border-radius: 12px;
+    background: transparent;
+    cursor: pointer; color: #e8ecff;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .12s;
+}
+.logo-btn:hover{
+
+
+    transform: translateY(-1px);
+}
+.logo-btn img{ height: 40px; width: auto; display:block; }
+
+/* Liens à droite */
+.top-links{ display:flex; align-items:center; gap: 22px; }
+.top-links a{ color:#e9edff; text-decoration:none; opacity:.9; }
+.top-links a:hover{ opacity:1; }
+.login-btn{
+    height: 36px; padding: 0 14px; border-radius: 14px; border:0;
+    background: linear-gradient(135deg,#8A2BE2,#D24BFF);
+    color:#fff; font-weight:700; cursor:pointer;
+    box-shadow: 0 10px 26px rgba(210,75,255,.35);
+}
+
+/* Backdrop de la sidebar */
+.sb-backdrop{
+    position: fixed; inset:0; background: rgba(0,0,0,.45);
+    backdrop-filter: blur(2px); z-index: 80;
+}
+
+/* Sidebar “coins arrondis” */
+.mini-sidebar{
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    height: calc(100vh - 24px);
+    width: 300px;
+    z-index: 90;
+
+    background: linear-gradient(180deg, #190D35, #2C032F);
+    border: 1px solid rgba(140,160,230,.25);
+    border-radius: 22px;
+    box-shadow: 0 24px 50px rgba(20,30,60,.45), 0 0 0 1px rgba(140,160,230,.18) inset;
+
+    transform: translateX(-120%);
+    transition: transform .28s cubic-bezier(.2,.8,.2,1);
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.mini-sidebar.open{ transform: translateX(0); }
+
+.sb-header{ padding: 14px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(130,150,220,.18); }
+
+.sb-header img{ height: 20px; width:auto; }
+.sb-close{
+    margin-left:auto; width:34px; height:34px; border-radius:12px;
+
+    background: transparent; color:#cfe1ff; cursor:pointer;
+}
+.sb-close:hover{ border-color: rgba(210,75,255,.6); color:#fff; }
+
+.sb-nav{
+    list-style: none;
+    margin: 0;
+    padding: 10px 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    flex: 1 1 auto;
+    overflow-y: auto;
+}
+.sb-nav a{
+    display:flex; align-items:center; gap:10px;
+    padding: 10px 12px; border-radius: 12px; color:#e6ebff; text-decoration:none;
+    border:1px solid transparent;
+    background: linear-gradient(180deg, #190D35, #0F051D);
+}
+.sb-nav a:hover{
+    border-color: rgba(210,75,255,.45);
+    box-shadow: 0 8px 22px rgba(210,75,255,.20) inset;
+}
+.sb-nav svg{ opacity:.9; }
+.sb-footer{
+
+    margin-top: auto;
+    padding: 14px 16px 18px;
+    border-top: 1px solid rgba(130,150,220,.18);
+    font-size: 0.85rem;
+    color: #aab4e8;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.sb-ericsson{
+    font-weight: 800;
+    letter-spacing: .08em;
+    color: #e8ecff;
+}
+.sb-copy{
+    opacity: .8;
+    font-size: 0.8rem;
+}
+
+.sb-close:focus,
+.logo-btn:focus{
+    outline: none !important;
+    box-shadow: none !important;
+}
+

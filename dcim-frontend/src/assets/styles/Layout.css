@@ -1,0 +1,54 @@
+:root { --topbar-h: 64px; }
+.layout-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+
+
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+    url("../images/Notes.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
+
+.layout-content {
+    flex: 1;
+    padding: 1.5rem;
+    color: white;
+    overflow-y: auto;
+    padding-top: calc(var(--topbar-h) + 77px);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(20, 20, 35, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(120, 120, 160, 0.7);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 150, 200, 0.9);
+}
+
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(120,120,160,0.7) rgba(20,20,35,0.6);
+}
+/* Chrome, Edge, Safari
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* Firefox */
+/** *//*{
+    scrollbar-width: none;
+}
+*/
